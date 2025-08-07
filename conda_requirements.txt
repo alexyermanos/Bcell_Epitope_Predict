@@ -45,10 +45,13 @@ joblib
 
 # Epigraph Dependencies
 wget
+libboost=1.73.0
+#salilab::dssp #salilab
+conda-forge::dssp<=4.5.3
 
 # BepiPred-2.0
-perl-bioperl
-blast-legacy
-blast
-libnsl=1.0.0
-signalp
+#perl-bioperl
+#blast-legacy
+#blast
+#libnsl=1.0.0
+#signalp

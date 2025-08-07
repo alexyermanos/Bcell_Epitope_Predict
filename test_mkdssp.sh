@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=bp3_test
+#SBATCH --job-name=mkdssp_test
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 #SBATCH --mem=20gb
 #SBATCH --cpus-per-task=4
 #SBATCH --time=00:30:00
-#SBATCH --output=bp3_test.log
+#SBATCH --output=mkdssp_test.log
 
 #run your code
 echo "Job started at:"
@@ -16,7 +16,7 @@ echo "Current working directory:"
 pwd
 
 echo $SHELL
-python3 src/BepiPred3.0-Predictor/bepipred3_CLI.py -i "test_data/pdb_protein_sequences_part_2.fasta" -o "test_data/test_output" -pred "vt_pred" 
+mkdssp test_data/2BIB.pdb
 
 echo "Job finished at:"
 date

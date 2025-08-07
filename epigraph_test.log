@@ -1,21 +1,13 @@
+Job started at:
+Thu Aug  7 11:06:03 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
 Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
-/hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/esm/pretrained.py:215: UserWarning: Regression weights not found, predicting contacts will not produce correct results.
-  warnings.warn(
-Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
-DSSP path: None
+downloading 1cfi.pdb from rcsb.org...
 
-test_data/ detected..
 Data Processing...
-Traceback (most recent call last):
-  File "/hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/EpiGraph/inference_customPDB.py", line 181, in <module>
-    data = generate_graph(pdb, save_path, distance_threshold=distance_threshold, RSA_threshold=RSA_threshold)
-  File "/hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/EpiGraph/inference_customPDB.py", line 147, in generate_graph
-    dssp = DSSP(model=model,in_file = f"{save_path}/{pdb}.pdb", dssp='mkdssp') #MYEDIT
-  File "/hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/DSSP.py", line 389, in __init__
-    dssp_dict, dssp_keys = dssp_dict_from_pdb_file(
-  File "/hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/DSSP.py", line 201, in dssp_dict_from_pdb_file
-    raise Exception("DSSP failed to produce an output")
-Exception: DSSP failed to produce an output
+['Best_GAT_16_1.pt', 'Best_GAT_14_9.pt', 'Best_GAT_11_2.pt', 'Best_GAT_16_3.pt', 'Best_GAT_17_8.pt', 'Best_GAT_13_6.pt', 'Best_GAT_28_5.pt', 'Best_GAT_8_4.pt', 'Best_GAT_21_7.pt', 'Best_GAT_15_0.pt']
+test_data/test_output/1cfi.csv saved!
+Job finished at:
+Thu Aug  7 11:06:18 CEST 2025

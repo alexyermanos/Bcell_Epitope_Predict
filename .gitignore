@@ -7,3 +7,4 @@ src/*
 !src/
 
 PDB_Processed/
+temp/

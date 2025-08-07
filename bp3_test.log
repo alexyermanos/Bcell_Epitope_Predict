@@ -1,8 +1,10 @@
+Job started at:
+Wed Aug  6 11:45:22 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
 GPU device not detected. Using CPU: cpu
-Directory for esm encodings not found. Made new one.
+Directory for esm encodings already there. Saving encodings there.
 Number of sequences detected in fasta file: 13
 ESM-2 encoding sequences. Saving encodings to /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/BepiPred3.0-Predictor/esm_encodings
 ESM-2 encoded sequence 6Y9U 1/13
@@ -24,3 +26,5 @@ Directory B-cell epitope predictions already there. Saving results there.
 Directory B-cell epitope predictions already there. Saving results there.
 Directory for saving plots already there. Saving results there.
 Creating figures
+Job finished at:
+Wed Aug  6 11:50:58 CEST 2025
