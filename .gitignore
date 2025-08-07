@@ -5,6 +5,8 @@ test_data/*
 # Ignore src
 src/*
 !src/
+!epigraph_inference.py
+!epigraph_model.py
 
 PDB_Processed/
 temp/
