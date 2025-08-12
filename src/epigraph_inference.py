@@ -23,10 +23,9 @@ warnings.filterwarnings('ignore')
 
 arg_parser = argparse.ArgumentParser(description="Data fetch and Processing")
 
+arg_parser.add_argument("--pdb", type=str, help="query PDB", required=True)
 
-arg_parser.add_argument("--pdb", type=str, help="query PDB")
-
-arg_parser.add_argument("--pdb_path", type=str, default="PDB", help="directory where you save the pdb downloaded from rcsb.org")
+arg_parser.add_argument("--pdb_path", type=str, default="PDB", help="directory where you where you parse the custom pdb and save the pdb downloaded from rcsb.org")
 
 arg_parser.add_argument("--save_path", type=str, default="PDB_Processed", help="directory where you save the heteroatom removed pdb")
 
@@ -47,7 +46,7 @@ arg_parser.add_argument("--device", type=str, default="cuda")
 args = arg_parser.parse_args()
 
 pdb = args.pdb
-pdb = pdb.lower()
+#pdb = pdb.lower()
 pdb_path = args.pdb_path
 save_path = args.save_path
 distance_threshold = args.distance_threshold
@@ -67,18 +66,26 @@ device = torch.device(args.device if torch.cuda.is_available() else "cpu")
 
 os.makedirs(pdb_path, exist_ok=True) #NEW
 
-print(f"downloading {pdb}.pdb from rcsb.org...")
-try:
-    wget.download(f"https://files.rcsb.org/download/{pdb}.pdb")
-    shutil.copy(f"{pdb}.pdb", pdb_path)
-    os.remove(f"{pdb}.pdb")
-except Exception as e:
-    print("="*50)
-    print("Error occured.", e)
-    print(f"{pdb}.pdb not found in rcsb.org")
-    print("Please check the query is available in rcsb.org as pdb format")
-    print("="*50)
-    pass
+pdb_file_path = os.path.join(pdb_path, f"{pdb}.pdb")
+
+if os.path.exists(pdb_file_path):
+    print(f"Found local PDB file: {pdb_file_path}")
+else:
+    print(f"{pdb_file_path} not found locally. Downloading from rcsb.org...")
+    print()
+    try:
+        pdb_lower = pdb.lower()
+        wget.download(f"https://files.rcsb.org/download/{pdb_lower}.pdb")
+        shutil.copy(f"{pdb_lower}.pdb", os.path.join(pdb_path, f"{pdb}.pdb"))
+        os.remove(f"{pdb_lower}.pdb")
+        print(f"Downloaded and saved to {pdb_file_path}")
+    except Exception as e:
+        print("="*50)
+        print("Error occurred.", e)
+        print(f"{pdb_lower}.pdb not found in rcsb.org and not found locally")
+        print("Please check the query is available in rcsb.org as pdb format")
+        print("="*50)
+        sys.exit(1)
     
 # class that removes hetero atoms in PDB format
 # ref https://stackoverflow.com/questions/25718201/remove-heteroatoms-from-pdb
@@ -88,23 +95,26 @@ class NonHetSelect(Select):
     def accept_residue(self, residue):
         return 1 if residue.id[0] == " " else 0
 
-
 # save pre-processed pdb format into save_path
-Bio_parser = PDBParser()
-model = Bio_parser.get_structure(f"{pdb}", f"{pdb_path}/{pdb}.pdb")
+try:
+    Bio_parser = PDBParser()
+    model = Bio_parser.get_structure(f"{pdb}", f"{pdb_path}/{pdb}.pdb")
+except Exception as e:
+    print("="*50)
+    print("Error occured.", e)
+    print(f"{pdb}.pdb not found in {pdb_path}/")
+    print(f"Please check the query PDB is available in {pdb_path} as pdb format")
+    print("="*50)
+    pass
 
-#if os.path.isdir(save_path):
-#    pass
-#else:
-#    os.mkdir(save_path)
-
-os.makedirs(save_path, exist_ok=True) #NEW
-
+if os.path.isdir(save_path):
+    pass
+else:
+    os.mkdir(save_path)
 
 io = PDBIO()
 io.set_structure(model)
 io.save(f"{save_path}/{pdb}.pdb", NonHetSelect())
-
 
 def euclidean_dist(x, y):
     return ((x[:, None] - y) ** 2).sum(-1).sqrt()
@@ -141,18 +151,30 @@ def generate_graph(pdb, save_path, distance_threshold, RSA_threshold):
     edges = edge_connection(coord_all_list, threshold=distance_threshold)
 
     dssp = dssp_dict_from_pdb_file(f"{save_path}/{pdb}.pdb", DSSP="mkdssp")
+    
+#    print("Available DSSP keys:")
+#    for key in dssp[0].keys():
+#        print(key)
+
 
     rsa_list = []
     for node in node_all_list:
         chain, res_name, res_id = node.split(":")
         try:
+            # indexing the dssp such as ('A', (' ', 53, ' '))
             key = (chain, (' ', int(res_id), ' '))
+            
+            # generate rsa by normalizing asa by residue_max_acc -> 
             rsa = dssp[0][key][2] / residue_max_acc["Sander"][res_name]
             rsa_list.append(rsa)
         except:
-            rsa_list.append(0)
             print("Key Error... appending rsa: 0")
-    
+            rsa_list.append(0)
+        
+        # The surface residues were selected with certain RSA cutoff 
+        # surface residues above RSA cutoff is True, buried residues below RSA cutoff is False
+
+
     train_mask = torch.tensor([rsa >= RSA_threshold for rsa in rsa_list])
 
     data = Data(
@@ -190,7 +212,7 @@ def ensemble_pred(model_path, data, kfold, RSA_threshold, device):
     if not pt_list:
         raise RuntimeError(f"No model (.pt) files found in {model_path}")
         
-    print(pt_list)
+    #print(pt_list)
         
     for pt in pt_list:
         model.load_state_dict(torch.load(f'{model_path}/{pt}', map_location=device), strict = False)

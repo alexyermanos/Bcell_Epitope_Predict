@@ -1,0 +1,63 @@
+Job started at:
+Mon Aug 11 23:41:51 CEST 2025
+Current working directory:
+/hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
+/bin/bash
+GPU device not detected. Using CPU: cpu
+Directory for esm encodings already there. Saving encodings there.
+Number of sequences detected in fasta file: 13
+ESM-2 encoding sequences. Saving encodings to /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/BepiPred3.0-Predictor/esm_encodings
+ESM-2 encoded sequence 6Y9U 1/13
+ESM-2 encoded sequence 6YA3 2/13
+ESM-2 encoded sequence 6YA4 3/13
+ESM-2 encoded sequence 6YAG 4/13
+ESM-2 encoded sequence 7F7Y 5/13
+ESM-2 encoded sequence 8A42 6/13
+ESM-2 encoded sequence 8QLC 7/13
+ESM-2 encoded sequence 8QLG 8/13
+ESM-2 encoded sequence 8QLH 9/13
+ESM-2 encoded sequence 8QLK 10/13
+ESM-2 encoded sequence 8QLM 11/13
+ESM-2 encoded sequence 8QLV 12/13
+ESM-2 encoded sequence 8QM0 13/13
+Generating BepiPred-3.0 scores
+Directory B-cell epitope predictions already there. Saving results there.
+Directory B-cell epitope predictions already there. Saving results there.
+Directory B-cell epitope predictions already there. Saving results there.
+Directory for saving plots already there. Saving results there.
+Creating figures
+Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
+Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
+Found local PDB file: test_data/PDB/3CX3.pdb
+
+Data Processing...
+temp/3CX3.csv saved!
+usage: 
+Example usage (default writes to output/):
+
+# 1. Predict single PDB (solved)
+python discotope3/main.py --pdb_or_zip_file data/example_pdbs_solved/7c4s.pdb
+
+# 2. Predict AlphaFold structure
+python discotope3/main.py --pdb_or_zip_file data/example_pdbs_alphafold/7tdm_B.pdb --struc_type alphafold
+
+# 3. Predict a folder of PDBs
+python discotope3/main.py --pdb_dir data/example_pdbs_solved
+
+# 4. Predict a ZIP file of PDBs
+python discotope3/main.py --pdb_or_zip_file data/pdbs_in_zipfile.zip
+
+# 5. Fetch PDBs from RCSB
+python discotope3/main.py --list_file data/pdb_list_solved.txt --struc_type solved
+
+# 6. Fetch PDBs from Alphafolddb
+python discotope3/main.py --list_file data/pdb_list_af2.txt --struc_type alphafold
+ 
+main.py: error: Path test_data/PDB/3CX3 does not exist!
+Running bepipred3...
+Running epigraph...
+Running discotope3...
+Error running Discotope3: Command '['python3', 'src/discotope3_web/discotope3/main.py', '--pdb_or_zip_file', 'test_data/PDB/3CX3', '--out_dir', 'temp', '--models_dir', 'src/discotope3_web/models']' returned non-zero exit status 2.
+Standardizing outputs...
+Job finished at:
+Mon Aug 11 23:50:07 CEST 2025
