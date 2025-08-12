@@ -18,7 +18,7 @@ pwd
 echo $SHELL
 #python3 src/EpiGraph/inferencev2.py --pdb 1cfi --device cuda --pdb_path test_data/PDB --save_path test_data/PDB_Processed --out_path test_data/test_output
 
-python3 src/epigraph_inference.py --pdb 3CX3 --device cuda --pdb_path test_data/PDB --save_path test_data/PDB_Processed --model_path src/EpiGraph/checkpoint --out_path test_data/test_output
+python3 scripts/epigraph_inference_custom.py --pdb 3CX3 --device cuda --pdb_path test_data/PDB --save_path temp/PDB_Processed --model_path src/EpiGraph/checkpoint --out_path temp/test_output
 
 #python3 src/EpiGraph/inference_customPDB.py --pdb "2BIB" --pdb_path "test_data/" --save_path "test_data/PDB_Processed" --model_path src/EpiGraph/checkpoint --out_path "test_data/test_output"
 

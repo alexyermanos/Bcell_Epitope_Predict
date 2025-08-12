@@ -7,7 +7,7 @@ import os
 import sys
 import warnings
 
-epigraph_path = os.path.join(os.path.dirname(__file__), "EpiGraph")
+epigraph_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src", "EpiGraph"))
 sys.path.insert(0, epigraph_path)
 sys.dont_write_bytecode = True
 
@@ -16,7 +16,7 @@ from Bio.PDB.DSSP import dssp_dict_from_pdb_file, residue_max_acc
 from torch_geometric.data import Data
 from esm_embedding import esm_if_2_embedding
 
-from epigraph_model import GAT
+from epigraph_model_custom import GAT
 import torch
 
 warnings.filterwarnings('ignore')

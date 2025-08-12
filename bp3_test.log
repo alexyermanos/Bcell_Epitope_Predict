@@ -1,5 +1,5 @@
 Job started at:
-Wed Aug  6 11:45:22 CEST 2025
+Tue Aug 12 13:07:22 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
@@ -23,8 +23,5 @@ ESM-2 encoded sequence 8QM0 13/13
 Generating BepiPred-3.0 scores
 Directory B-cell epitope predictions already there. Saving results there.
 Directory B-cell epitope predictions already there. Saving results there.
-Directory B-cell epitope predictions already there. Saving results there.
-Directory for saving plots already there. Saving results there.
-Creating figures
 Job finished at:
-Wed Aug  6 11:50:58 CEST 2025
+Tue Aug 12 13:10:18 CEST 2025

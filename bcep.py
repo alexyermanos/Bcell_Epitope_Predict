@@ -4,50 +4,46 @@ import sys
 import os
 import shutil
 
-# Function to run Bepipred3
 def run_bepipred3(fasta_file, temp_dir, pred_model):
-    script_path = "src/BepiPred3.0-Predictor/bepipred3_CLI.py"
+    script_path = "scripts/bepipred3_custom.py"
 
     try:
-        # Ensure the temp directory exists
-        os.makedirs(temp_dir, exist_ok=True)
+        os.makedirs(os.path.abspath(temp_dir), exist_ok=True)
         
-        # Run Bepipred3
         subprocess.run([
             "python3", script_path,
             "-i", fasta_file,
-            "-o", temp_dir,  # Output to temp directory
-            "-pred", pred_model
+            "-o", temp_dir,
+            "-pred", pred_model,
+            "-add_seq_len"
         ], check=True)
         
     except subprocess.CalledProcessError as e:
-        print(f"Error running Bepipred3: {e}")
+        print(f"Error running Bepipred3: {e}", file=sys.stderr)
 
-# Function to run Discotope3
-def run_discotope3(pdb_file, pdb_path, temp_dir):
+def run_discotope3(pdb_file, pdb_path, temp_dir, bp3pred):
     script_path = "src/discotope3_web/discotope3/main.py"
     models_dir = "src/discotope3_web/models"
     
-    file_location = os.path.join(pdb_path, pdb_file)
+    pdb_file_with_ext = pdb_file + ".pdb" #Discotope3 requires the extension
+    file_location = os.path.join(pdb_path, pdb_file_with_ext)
     
     try:
-        # Ensure the temp directory exists
-        os.makedirs(temp_dir, exist_ok=True)
+        os.makedirs(os.path.abspath(temp_dir), exist_ok=True)
         
-        # Run Discotope3
         subprocess.run([
             "python3", script_path,
             "--pdb_or_zip_file", file_location,
-            "--out_dir", temp_dir,  # Output to temp directory
-            "--models_dir", models_dir
+            "--out_dir", temp_dir,
+            "--models_dir", models_dir,
+            "--pred", bp3pred
         ], check=True)
         
     except subprocess.CalledProcessError as e:
-        print(f"Error running Discotope3: {e}")
+        print(f"Error running Discotope3: {e}", file=sys.stderr)
 
-# Function to run EpiGraph        
 def run_epigraph(pdb_file, pdb_path, device, save_path, out_dir):
-    script_path = "src/epigraph_inference.py"
+    script_path = "scripts/epigraph_inference_custom.py"
     models_dir = "src/EpiGraph/checkpoint"
     
     try:
@@ -61,9 +57,8 @@ def run_epigraph(pdb_file, pdb_path, device, save_path, out_dir):
             "--out_path", out_dir
         ], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Error running EpiGraph: {e}")
+        print(f"Error running EpiGraph: {e}", file=sys.stderr)
 
-# FIXME: Function to standardize outputs depending on tool (left empty for now)
 def standardize_outputs(temp_dir, out_dir):
     # Placeholder for future output standardization logic
     pass
@@ -71,46 +66,47 @@ def standardize_outputs(temp_dir, out_dir):
 def main():
     parser = argparse.ArgumentParser(description="Run B-cell epitope prediction tools.")
     
-    # Add the tool selection argument to accept multiple tools
     parser.add_argument(
         "--tool", 
         choices=["bepipred3", "discotope3", "epigraph"],
         required=True,
-        nargs='+',  # Allow multiple tools to be selected
+        nargs='+',
         help="Select one or more tools to run (bepipred3, discotope3, epigraph)"
     )
 
-    # Common argument for temporary output directory
     parser.add_argument(
         "--temp_dir", 
         type=str, 
-        default="temp",  # Default temp directory
+        default="temp",
         help="Temporary directory to store intermediate outputs (default: 'temp')"
     )
 
-    # Common argument for final output directory
     parser.add_argument(
         "--out_dir", 
         type=str, 
-        default="output",  # Default output directory
+        default="output",
         help="Final output directory (default: 'output')"
     )
     
-    # Arguments for Discotope3 & EpiGraph
     parser.add_argument(
         "--pdb", 
         type=str, 
-        help="PDB file for Discotope3 & EpiGraph (required)"
+        help="PDB file for Discotope3 & EpiGraph (required for those tools)"
     )
     
-    # Arguments for Discotope3
     parser.add_argument(
         "--pdb_path", 
         type=str, 
-        help="directory where you where you parse the custom pdb and save the pdb downloaded from rcsb.org"
+        help="Directory where PDB files are located (required for Discotope3 & EpiGraph)"
+    )
+    
+    parser.add_argument(
+        "--epigraph_device", 
+        type=str, 
+        default="cuda", 
+        help="Device to use for EpiGraph (default: 'cuda')"
     )
 
-    # Arguments for Bepipred3
     parser.add_argument(
         "--fasta", 
         type=str, 
@@ -118,42 +114,43 @@ def main():
     )
 
     parser.add_argument(
-        "--pred", 
+        "--bp3pred", 
         type=str, 
         default="vt_pred", 
+        choices=['vt_pred', 'mjv_pred'],
         help="Prediction model for Bepipred3 (default: 'vt_pred')"
     )
 
     args = parser.parse_args()
 
-    # Loop through selected tools and run the corresponding function
     for tool in args.tool:
         if tool == "discotope3":
             if not args.pdb:
-                print("Error: --pdb is required for Discotope3.")
+                print("Error: --pdb is required for Discotope3.", file=sys.stderr)
                 sys.exit(1)
-            elif not args.pdb_path:
-                print("Error: --pdb_path is required for Discotope3.")
+            if not args.pdb_path:
+                print("Error: --pdb_path is required for Discotope3.", file=sys.stderr)
                 sys.exit(1)
             print(f"Running {tool}...")
-            run_discotope3(args.pdb, args.pdb_path, args.temp_dir)
+            run_discotope3(args.pdb, args.pdb_path, args.temp_dir, args.bp3pred)
+        
         elif tool == "epigraph":
             if not args.pdb:
-                print("Error: --pdb is required for EpiGraph.")
+                print("Error: --pdb is required for EpiGraph.", file=sys.stderr)
                 sys.exit(1)
-            elif not args.pdb_path:
-                print("Error: --pdb_path is required for EpiGraph.")
+            if not args.pdb_path:
+                print("Error: --pdb_path is required for EpiGraph.", file=sys.stderr)
                 sys.exit(1)
             print(f"Running {tool}...")
-            run_epigraph(args.pdb, args.pdb_path, "cuda", args.temp_dir, args.temp_dir)
+            run_epigraph(args.pdb, args.pdb_path, args.epigraph_device, args.temp_dir, args.temp_dir)
+        
         elif tool == "bepipred3":
             if not args.fasta:
-                print("Error: --fasta is required for Bepipred3.")
+                print("Error: --fasta is required for Bepipred3.", file=sys.stderr)
                 sys.exit(1)
             print(f"Running {tool}...")
-            run_bepipred3(args.fasta, args.temp_dir, args.pred)
+            run_bepipred3(args.fasta, args.temp_dir, args.bp3pred)
 
-    # After running tools, standardize the outputs
     print("Standardizing outputs...")
     standardize_outputs(args.temp_dir, args.out_dir)
 

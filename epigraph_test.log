@@ -1,5 +1,5 @@
 Job started at:
-Thu Aug  7 15:19:12 CEST 2025
+Tue Aug 12 13:05:22 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
@@ -8,7 +8,6 @@ Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_
 Found local PDB file: test_data/PDB/3CX3.pdb
 
 Data Processing...
-['Best_GAT_16_1.pt', 'Best_GAT_14_9.pt', 'Best_GAT_11_2.pt', 'Best_GAT_16_3.pt', 'Best_GAT_17_8.pt', 'Best_GAT_13_6.pt', 'Best_GAT_28_5.pt', 'Best_GAT_8_4.pt', 'Best_GAT_21_7.pt', 'Best_GAT_15_0.pt']
 test_data/test_output/3CX3.csv saved!
 Job finished at:
-Thu Aug  7 15:19:58 CEST 2025
+Tue Aug 12 13:06:51 CEST 2025
