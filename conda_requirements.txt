@@ -1,11 +1,11 @@
 # Core Python Packages
 python=3.10.*
 pip
-setuptools
+setuptools==59.8.0
 wheel
 
 # Bioinformatics Libraries
-biotite=0.40.0
+biotite=0.40.*
 biopython
 
 # R Packages
@@ -45,13 +45,5 @@ joblib
 
 # Epigraph Dependencies
 wget
-libboost=1.73.0
-#salilab::dssp #salilab
+libboost>=1.73
 conda-forge::dssp<=4.5.3
-
-# BepiPred-2.0
-#perl-bioperl
-#blast-legacy
-#blast
-#libnsl=1.0.0
-#signalp
