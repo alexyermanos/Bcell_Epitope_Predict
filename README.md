@@ -23,7 +23,7 @@ unzip models.zip
 
 ## To install necessary libraries:
 ```
-conda install --file conda_requirements.txt -c conda-forge -c bioconda -pyg
+conda install --file conda_requirements.txt -c conda-forge -c bioconda -c pyg
 pip install -r pip_requirements.txt
 ```
 

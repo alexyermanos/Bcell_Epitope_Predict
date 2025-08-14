@@ -1,3 +1,6 @@
+#Tools
+wget
+
 # Core Python Packages
 python=3.10.*
 pip
@@ -36,14 +39,12 @@ bioconductor-genomeinfodbdata
 
 # Machine Learning & Graph Processing (Discotope3)
 pyg  # From pyg channel
-pytorch
+#pytorch=1.11
+#cudatoolkit=11.3
 scikit-learn
-torch-scatter
+#torch-scatter
 xgboost
-pygam
-joblib
 
 # Epigraph Dependencies
-wget
 libboost>=1.73
 conda-forge::dssp<=4.5.3

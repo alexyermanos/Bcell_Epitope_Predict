@@ -1,9 +1,9 @@
 Job started at:
-Tue Aug 12 13:07:22 CEST 2025
+Thu Aug 14 00:22:55 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
-GPU device not detected. Using CPU: cpu
+GPU device detected: cuda
 Directory for esm encodings already there. Saving encodings there.
 Number of sequences detected in fasta file: 13
 ESM-2 encoding sequences. Saving encodings to /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/BepiPred3.0-Predictor/esm_encodings
@@ -22,6 +22,7 @@ ESM-2 encoded sequence 8QLV 12/13
 ESM-2 encoded sequence 8QM0 13/13
 Generating BepiPred-3.0 scores
 Directory B-cell epitope predictions already there. Saving results there.
+Created temp/test_output/bp3_pdb_protein_sequences_part_2.csv
 Directory B-cell epitope predictions already there. Saving results there.
 Job finished at:
-Tue Aug 12 13:10:18 CEST 2025
+Thu Aug 14 00:28:20 CEST 2025
