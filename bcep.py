@@ -21,7 +21,7 @@ def run_bepipred3(fasta_file, temp_dir, pred_model):
     except subprocess.CalledProcessError as e:
         print(f"Error running Bepipred3: {e}", file=sys.stderr)
 
-def run_discotope3(pdb_file, pdb_path, temp_dir, bp3pred):
+def run_discotope3(pdb_file, pdb_path, temp_dir):
     script_path = "src/discotope3_web/discotope3/main.py"
     models_dir = "src/discotope3_web/models"
     
@@ -35,8 +35,7 @@ def run_discotope3(pdb_file, pdb_path, temp_dir, bp3pred):
             "python3", script_path,
             "--pdb_or_zip_file", file_location,
             "--out_dir", temp_dir,
-            "--models_dir", models_dir,
-            "--pred", bp3pred
+            "--models_dir", models_dir
         ], check=True)
         
     except subprocess.CalledProcessError as e:
@@ -54,7 +53,7 @@ def run_epigraph(pdb_file, pdb_path, device, save_path, out_dir):
             "--pdb_path", pdb_path,
             "--save_path", save_path,
             "--model_path", models_dir,
-            "--out_path", out_dir
+            "--out_path", out_dir,
         ], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error running EpiGraph: {e}", file=sys.stderr)
