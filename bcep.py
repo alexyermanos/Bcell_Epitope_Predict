@@ -110,7 +110,7 @@ def main():
     parser.add_argument(
         "--fasta", 
         type=str, 
-        help="FASTA file for Bepipred3 (required)"
+        help="FASTA file for Bepipred3 (required unless PDB is provided)"
     )
 
     parser.add_argument(
@@ -146,10 +146,41 @@ def main():
         
         elif tool == "bepipred3":
             if not args.fasta:
-                print("Error: --fasta is required for Bepipred3.", file=sys.stderr)
-                sys.exit(1)
+                if args.pdb:
+                    print("No FASTA provided. Extracting SEQRES from PDB...")
+                    pdb_file_path = os.path.abspath(os.path.join(args.pdb_path, args.pdb + ".pdb"))
+                    if not os.path.isfile(pdb_file_path):
+                        print(f"Error: PDB file not found at {pdb_file_path}", file=sys.stderr)
+                        sys.exit(1)
+
+                    # Create temp_dir/fasta subdirectory
+                    fasta_dir = os.path.abspath(os.path.join(args.temp_dir, "fasta"))
+                    os.makedirs(fasta_dir, exist_ok=True)
+
+                    # Path to output FASTA
+                    fasta_out = os.path.join(fasta_dir, args.pdb + ".fasta")
+
+                    # Call pdbseqres2fasta.py
+                    try:
+                        subprocess.run([
+                            "python3", "-u","scripts/pdbseqres2fasta.py",
+                            pdb_file_path,
+                            fasta_out
+                        ], check=True)
+                        args.fasta = fasta_out  
+                    except subprocess.CalledProcessError as e:
+                        print(f"Error running pdbseqres2fasta.py: {e}", file=sys.stderr)
+                        sys.exit(1)
+                else:
+                    print("Error: --fasta or --pdb is required for Bepipred3.", file=sys.stderr)
+                    sys.exit(1)
+
             print(f"Running {tool}...")
             run_bepipred3(args.fasta, args.temp_dir, args.bp3pred)
+
+    print("Standardizing outputs...")
+    standardize_outputs(args.temp_dir, args.out_dir)
+
 
     print("Standardizing outputs...")
     standardize_outputs(args.temp_dir, args.out_dir)
