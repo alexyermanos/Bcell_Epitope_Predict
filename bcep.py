@@ -131,7 +131,7 @@ def main():
                 print("Error: --pdb_path is required for Discotope3.", file=sys.stderr)
                 sys.exit(1)
             print(f"Running {tool}...")
-            run_discotope3(args.pdb, args.pdb_path, args.temp_dir, args.bp3pred)
+            run_discotope3(args.pdb, args.pdb_path, args.temp_dir)
         
         elif tool == "epigraph":
             if not args.pdb:
