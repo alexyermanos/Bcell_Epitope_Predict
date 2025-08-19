@@ -25,7 +25,7 @@ def run_discotope3(pdb_file, pdb_path, temp_dir):
     script_path = "src/discotope3_web/discotope3/main.py"
     models_dir = "src/discotope3_web/models"
     
-    pdb_file_with_ext = pdb_file + ".pdb" #Discotope3 requires the extension
+    pdb_file_with_ext = pdb_file + ".pdb" # Discotope3 requires the extension
     file_location = os.path.join(pdb_path, pdb_file_with_ext)
     
     try:
@@ -123,6 +123,9 @@ def main():
     args = parser.parse_args()
 
     for tool in args.tool:
+        tool_temp_dir = os.path.join(args.temp_dir, tool)
+        os.makedirs(tool_temp_dir, exist_ok=True)
+
         if tool == "discotope3":
             if not args.pdb:
                 print("Error: --pdb is required for Discotope3.", file=sys.stderr)
@@ -131,7 +134,7 @@ def main():
                 print("Error: --pdb_path is required for Discotope3.", file=sys.stderr)
                 sys.exit(1)
             print(f"Running {tool}...")
-            run_discotope3(args.pdb, args.pdb_path, args.temp_dir)
+            run_discotope3(args.pdb, args.pdb_path, tool_temp_dir)
         
         elif tool == "epigraph":
             if not args.pdb:
@@ -141,7 +144,7 @@ def main():
                 print("Error: --pdb_path is required for EpiGraph.", file=sys.stderr)
                 sys.exit(1)
             print(f"Running {tool}...")
-            run_epigraph(args.pdb, args.pdb_path, args.epigraph_device, args.temp_dir, args.temp_dir)
+            run_epigraph(args.pdb, args.pdb_path, args.epigraph_device, tool_temp_dir, tool_temp_dir)
         
         elif tool == "bepipred3":
             if not args.fasta:
@@ -152,17 +155,15 @@ def main():
                         print(f"Error: PDB file not found at {pdb_file_path}", file=sys.stderr)
                         sys.exit(1)
 
-                    # Create temp_dir/fasta subdirectory
-                    fasta_dir = os.path.abspath(os.path.join(args.temp_dir, "fasta"))
+                    # Create tool-specific temp subdirectory for FASTA
+                    fasta_dir = os.path.join(tool_temp_dir, "fasta")
                     os.makedirs(fasta_dir, exist_ok=True)
 
-                    # Path to output FASTA
                     fasta_out = os.path.join(fasta_dir, args.pdb + ".fasta")
 
-                    # Call pdbseqres2fasta.py
                     try:
                         subprocess.run([
-                            "python3", "-u","scripts/pdbseqres2fasta.py",
+                            "python3", "-u", "scripts/pdbseqres2fasta.py",
                             pdb_file_path,
                             fasta_out
                         ], check=True)
@@ -175,11 +176,7 @@ def main():
                     sys.exit(1)
 
             print(f"Running {tool}...")
-            run_bepipred3(args.fasta, args.temp_dir, args.bp3pred)
-
-    print("Standardizing outputs...")
-    standardize_outputs(args.temp_dir, args.out_dir)
-
+            run_bepipred3(args.fasta, tool_temp_dir, args.bp3pred)
 
     print("Standardizing outputs...")
     standardize_outputs(args.temp_dir, args.out_dir)

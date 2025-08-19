@@ -1,14 +1,16 @@
 Job started at:
-Fri Aug 15 16:39:23 CEST 2025
+Tue Aug 19 11:47:44 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
-Running discotope3...
-Traceback (most recent call last):
-  File "/hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/bcep.py", line 188, in <module>
-    main()
-  File "/hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/bcep.py", line 134, in main
-    run_discotope3(args.pdb, args.pdb_path, args.temp_dir, args.bp3pred)
-TypeError: run_discotope3() takes 3 positional arguments but 4 were given
-Job finished at:
-Fri Aug 15 16:39:23 CEST 2025
+Saved FASTA to temp/bepipred3/fasta/2BIB.fasta
+GPU device detected: cuda
+Directory for esm encodings already there. Saving encodings there.
+Number of sequences detected in fasta file: 1
+ESM-2 encoding sequences. Saving encodings to /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/BepiPred3.0-Predictor/esm_encodings
+ESM-2 encoded sequence 2BIB:A 1/1
+Generating BepiPred-3.0 scores
+Directory B-cell epitope predictions already there. Saving results there.
+Created temp/bepipred3/bp3_2BIB.csv
+Directory B-cell epitope predictions already there. Saving results there.
+Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
