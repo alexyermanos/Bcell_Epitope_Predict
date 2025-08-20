@@ -41,10 +41,11 @@ bioconductor-genomeinfodbdata
 pyg  # From pyg channel
 #pytorch=1.11
 #cudatoolkit=11.3
-scikit-learn
+#scikit-learn
 #torch-scatter
 xgboost
 
 # Epigraph Dependencies
 libboost>=1.73
-conda-forge::dssp<=4.5.3
+libcifpp
+conda-forge::dssp==4.5.3

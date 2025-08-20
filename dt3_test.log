@@ -1,14 +1,14 @@
 Job started at:
-Thu Aug 14 18:08:29 CEST 2025
+Wed Aug 20 12:42:27 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
-[2025-08-14 18:08:32,432] Single-chain mode set, will predict PDBs as single chains
-[2025-08-14 18:08:32,434] Single PDB file input (2BIB), extracting single chains to /scratch/38846277/tmpefdg8rwc
-[2025-08-14 18:08:32,582] Found 1 extracted single chains in /scratch/38846277/tmpefdg8rwc
-[2025-08-14 18:08:32,582] Pre-processing PDBs using ESM-IF1
-[2025-08-14 18:08:41,932] Predicting PDBs with DiscoTope-3.0
-[2025-08-14 18:08:42,217] Saving predictions for 2BIB_A.pdb to temp/test_output/2BIB/2BIB_A_discotope3.csv
-[2025-08-14 18:08:42,314] Predicted 1 / 1 PDB files extracted from 1 input PDBs, saved to temp/test_output/2BIB
+[2025-08-20 12:45:21,453] Single-chain mode set, will predict PDBs as single chains
+[2025-08-20 12:45:21,456] Single PDB file input (2BIB), extracting single chains to /scratch/38982236/tmpmf8kcxdb
+[2025-08-20 12:45:21,537] Found 1 extracted single chains in /scratch/38982236/tmpmf8kcxdb
+[2025-08-20 12:45:21,537] Pre-processing PDBs using ESM-IF1
+[2025-08-20 12:48:51,270] Predicting PDBs with DiscoTope-3.0
+[2025-08-20 12:48:51,527] Saving predictions for 2BIB_A.pdb to temp/test_output/2BIB/2BIB_A_discotope3.csv
+[2025-08-20 12:48:51,677] Predicted 1 / 1 PDB files extracted from 1 input PDBs, saved to temp/test_output/2BIB
 Job finished at:
-Thu Aug 14 18:08:43 CEST 2025
+Wed Aug 20 12:49:04 CEST 2025

@@ -12,7 +12,8 @@ sys.path.insert(0, epigraph_path)
 sys.dont_write_bytecode = True
 
 from Bio.PDB import PDBParser, PDBIO, Select
-from Bio.PDB.DSSP import dssp_dict_from_pdb_file, residue_max_acc
+from Bio.PDB.DSSP import dssp_dict_from_pdb_file, DSSP, residue_max_acc
+from Bio.Data.IUPACData import protein_letters_3to1
 from torch_geometric.data import Data
 from esm_embedding import esm_if_2_embedding
 
@@ -150,30 +151,29 @@ def generate_graph(pdb, save_path, distance_threshold, RSA_threshold):
 
     edges = edge_connection(coord_all_list, threshold=distance_threshold)
 
-    dssp = dssp_dict_from_pdb_file(f"{save_path}/{pdb}.pdb", DSSP="mkdssp")
+    dssp = DSSP(model[0], f"{save_path}/{pdb}.pdb", dssp="mkdssp", acc_array="Sander")
     
-#    print("Available DSSP keys:")
-#    for key in dssp[0].keys():
-#        print(key)
-
-
     rsa_list = []
     for node in node_all_list:
         chain, res_name, res_id = node.split(":")
         try:
-            # indexing the dssp such as ('A', (' ', 53, ' '))
+            # DSSP keys are tuples: (chain_id, (hetfield, resseq, icode))
             key = (chain, (' ', int(res_id), ' '))
             
-            # generate rsa by normalizing asa by residue_max_acc -> 
-            rsa = dssp[0][key][2] / residue_max_acc["Sander"][res_name]
-            rsa_list.append(rsa)
-        except:
-            print("Key Error... appending rsa: 0")
+            # ASA is at index 3 in DSSP value tuple, already adjusted for residue_max_acc["Sander"]
+            asa = dssp[key][3]
+            
+            #print(f"{key}: {dssp[key]}")
+            #print(f"resname: {res_name}, max_acc: {residue_max_acc['Sander'][
+            #print(f"asa={asa}")
+            
+            rsa_list.append(asa)
+        except KeyError:
+            print(f"Key Error for {node}... appending rsa: 0") 
             rsa_list.append(0)
         
         # The surface residues were selected with certain RSA cutoff 
         # surface residues above RSA cutoff is True, buried residues below RSA cutoff is False
-
 
     train_mask = torch.tensor([rsa >= RSA_threshold for rsa in rsa_list])
 
@@ -268,11 +268,6 @@ data = {"PDB": pdb,
         "RSA": rsa_list}
 
 df = pd.DataFrame(data)
-
-#if os.path.isdir(out_path):
-#    pass
-#else:
-#    os.mkdir(out_path)
 
 os.makedirs(out_path, exist_ok=True) #NEW
 

@@ -22,7 +22,6 @@ scikit-learn
 xgboost==2.*
 pygam==0.9.0
 joblib
-pygam
 
 --extra-index-url https://download.pytorch.org/whl/cu113
 torch==1.11.0+cu113
@@ -34,13 +33,14 @@ torch-cluster==1.6.0
 torch-spline-conv==1.2.1
 torch-geometric==2.1.0.post1
 
+#setuptools<58.9
 ./src/discotope3_web
 
 # EpiGraph
 wget==3.2
 rsa==4.8
 #torch-geometric==2.0.4
-setuptools<58.9
+#setuptools<58.9
 bioservices
 
 # Patched ESM with esmfold_structure_module_only_8M
