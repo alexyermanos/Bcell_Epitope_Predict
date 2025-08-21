@@ -58,8 +58,21 @@ def run_epigraph(pdb_file, pdb_path, device, save_path, out_dir):
     except subprocess.CalledProcessError as e:
         print(f"Error running EpiGraph: {e}", file=sys.stderr)
 
-def standardize_outputs(temp_dir, out_dir):
-    # Placeholder for future output standardization logic
+def standardize_outputs(tool, tool_temp_dir, out_dir):
+    """
+    Standardize outputs for each tool individually.
+    """
+    os.makedirs(out_dir, exist_ok=True)
+
+    if tool == "bepipred3":
+        pass
+
+    elif tool == "discotope3":
+        pass
+
+    elif tool == "epigraph":
+        pass
+
     pass
 
 def main():
@@ -119,6 +132,12 @@ def main():
         choices=['vt_pred', 'mjv_pred'],
         help="Prediction model for Bepipred3 (default: 'vt_pred')"
     )
+    
+    parser.add_argument(
+    "--standardize_outputs",
+    action="store_true",
+    help="If set, will standardize the outputs and integrate the different tools outputs into a single csv. (default True)"
+    )
 
     args = parser.parse_args()
 
@@ -145,7 +164,7 @@ def main():
                 sys.exit(1)
             print(f"Running {tool}...")
             run_epigraph(args.pdb, args.pdb_path, args.epigraph_device, tool_temp_dir, tool_temp_dir)
-        
+            
         elif tool == "bepipred3":
             if not args.fasta:
                 if args.pdb:
@@ -178,7 +197,6 @@ def main():
             print(f"Running {tool}...")
             run_bepipred3(args.fasta, tool_temp_dir, args.bp3pred)
 
-    print("Standardizing outputs...")
     standardize_outputs(args.temp_dir, args.out_dir)
 
 if __name__ == "__main__":
