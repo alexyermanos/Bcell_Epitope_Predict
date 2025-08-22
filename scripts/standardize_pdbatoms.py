@@ -10,7 +10,7 @@ def standardize_pdb(pdb_file, output_dir):
 
     # Compute output CSV path: {output_dir}/{pdb_basename}.csv
     pdb_basename = os.path.splitext(os.path.basename(pdb_file))[0]
-    output_csv = os.path.join(output_dir, f"{pdb_basename}_ca_atoms.csv")
+    output_csv = os.path.join(output_dir, f"{pdb_basename}_standardized.csv")
 
     # Load PDB structure
     parser = PDB.PDBParser(QUIET=True)
@@ -25,7 +25,7 @@ def standardize_pdb(pdb_file, output_dir):
                     ca_atom = res['CA']
                     atom_records.append({
                         'structure' : pdb_basename,
-                        'model': model,
+                        'model': model.id,
                         'chain': chain.id,
                         'resid': res.get_resname(),
                         'resno': res.id[1],
@@ -40,7 +40,7 @@ def standardize_pdb(pdb_file, output_dir):
                         'element': ca_atom.element
                     })
     atom_df = pd.DataFrame(atom_records)
-    print(atom_df)
+    #print(atom_df)
 
     # Extract SEQRES sequences for each chain
     seqres_records = list(SeqIO.parse(pdb_file, "pdb-seqres"))
@@ -55,65 +55,70 @@ def standardize_pdb(pdb_file, output_dir):
                 'seqresno': i
             })
     seqres_df = pd.DataFrame(seqres_data)
-    print(seqres_df)
+    #print(seqres_df)
 
     # Align CA atoms to SEQRES sequences for each chain
     standardized_records = []
+
     for chain in seqres_df['chain'].unique():
         chain_seqres = seqres_df[seqres_df['chain'] == chain]
         chain_atoms = atom_df[atom_df['chain'] == chain]
 
         seqres_seq = "".join(chain_seqres['seqresid'])
-        print(f'seq: {seqres_seq}')
-        
-        atom_seq = "".join([PDB.Polypeptide.three_to_one(r) for r in chain_atoms['resid']])
-        print(f'atom seq: {atom_seq}')
-        
-        match_score = 1
-        mismatch_score = -1
-        gap_open = -1       # minor penalty for opening a gap
-        gap_extend = 0      # no extra penalty for extending a gap
+
+        # Only unique atoms for alignment
+        unique_atoms = chain_atoms.drop_duplicates(subset=['structure','model','chain','resid','resno'])
+        atom_seq = "".join([PDB.Polypeptide.three_to_one(r) for r in unique_atoms['resid']])
 
         alignments = pairwise2.align.globalms(
-            seqres_seq,
-            atom_seq,
-            match_score,
-            mismatch_score,
-            gap_open,
-            gap_extend,
-            penalize_end_gaps=(False, False)  # free gaps at start/end of both sequences
+            seqres_seq, atom_seq, 1, -1, -1, 0, penalize_end_gaps=(False, False)
         )
-        print(f'alignment: {alignments}')
-        
-        aln_seqres, aln_atoms, _, _, _ = alignments[0]
-        print(f'aln_seqres: {aln_seqres}')
-        print(f'aln_atoms: {aln_atoms}')
 
-        seqres_index = 0
+        aln_seqres, aln_atoms, _, _, _ = alignments[0]
+
+        mapping_records = []
         atom_index = 0
-        for s, a in zip(aln_seqres, aln_atoms):
+        for seqres_index, (s, a) in enumerate(zip(aln_seqres, aln_atoms), start=1):
             if a != '-':
-                atom_row = chain_atoms.iloc[atom_index].to_dict()
-                atom_row['seqresid'] = s
-                atom_row['seqresno'] = seqres_index + 1
-                standardized_records.append(atom_row)
+                row = unique_atoms.iloc[atom_index]
+                mapping_records.append({
+                    'structure': row['structure'],
+                    'model': row['model'],
+                    'chain': row['chain'],
+                    'seqresno': seqres_index,
+                    'seqresid': s,
+                    'resno': row['resno'],
+                    'resid': row['resid']
+                })
                 atom_index += 1
             else:
-                standardized_records.append({
-                    'structure' : pdb_basename,
+                mapping_records.append({
+                    'structure': pdb_basename,
+                    'model': model.id,
                     'chain': chain,
-                    'resid': '-',
-                    'resno': '-',
+                    'seqresno': seqres_index,
                     'seqresid': s,
-                    'seqresno': seqres_index + 1
+                    'resno': None,
+                    'resid': '-'
                 })
-            seqres_index += 1
+
+        mapping_df = pd.DataFrame(mapping_records)
+
+        # Merge with full chain atoms to preserve multiple occupancies
+        chain_full_atoms = mapping_df.merge(
+            chain_atoms,
+            on=['structure','model','chain','resno','resid'],
+            how='left'
+        )
+
+        standardized_records.append(chain_full_atoms)
+
+    # Concatenate all chains
+    out_df = pd.concat(standardized_records, ignore_index=True)
 
     # Save CSV
-    out_df = pd.DataFrame(standardized_records)
-    print(out_df)
-    
     out_df.to_csv(output_csv, index=False)
+    #print(out_df)
     print(f"Saved standardized atom records to {output_csv}")
 
 
