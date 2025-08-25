@@ -33,7 +33,7 @@ The main script is  `bcep.py`.
 `python bcep.py --pdb_or_fasta 2BIB --pdb_dir test_data/PDB --tools discotope3 epigraph bepipred3`
 
 Arguments:
-- `--tools` select one or more tools to run from (`discotope3`, `bepipred3`, `epigraph`)
+- `--tool` select one or more tools to run from (`discotope3`, `bepipred3`, `epigraph`)
 - `--pdb_or_fasta` local PDB/fasta file **without** .pdb/.fasta extension (required) 
 - `--pdb_dir` directory where local PDB files are located (required for `discotope3`, `epigraph`, alternative input for `bepipred3`) 
 - `--fasta_dir` directory where local FASTA files are located (alternative input for `bepipred3`) 
