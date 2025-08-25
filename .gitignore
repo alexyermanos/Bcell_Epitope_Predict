@@ -8,5 +8,5 @@ src/*
 !epigraph_inference.py
 !epigraph_model.py
 
-PDB_Processed/
 temp/
+test_output/
