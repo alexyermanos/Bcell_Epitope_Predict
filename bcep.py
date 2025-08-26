@@ -5,6 +5,7 @@ import os
 import shutil
 import pandas as pd
 import glob
+from Bio.PDB import Polypeptide
 
 def run_bepipred3(name, fasta_dir, temp_dir, pred_model, pdb_dir=None):
     """
@@ -135,12 +136,12 @@ def process_bepipred3(name, tool_dir):
     # Rename scores
     df = df.rename(columns={
         "BepiPred-3.0 score": "bepipred3_score",
-        "BepiPred-3.0 linear epitope score": "bepipred3_epiclass"
+        "BepiPred-3.0 linear epitope score": "bepipred3_score_linear"
     })
 
     # Keep relevant columns
     df = df[["structure", "chain", "seqresno", "seqresid",
-             "bepipred3_score", "bepipred3_epiclass"]]
+             "bepipred3_score", "bepipred3_score_linear"]]
 
     return df
 
@@ -166,7 +167,11 @@ def process_discotope3(name, tool_dir):
 
     for csv_file in csv_files:
         df = pd.read_csv(csv_file)
-
+        df["res_id"] = pd.to_numeric(df["res_id"], errors="coerce").astype("Int64")
+        
+        # Convert 1-letter residue code to 3-letter using Biopython
+        df["residue"] = df["residue"].apply(lambda r: Polypeptide.one_to_three(r))
+        
         # Extract pdb name from csv filename (before _[chain])
         pdb_base = os.path.basename(csv_file).split("_")[0]
 
@@ -185,11 +190,12 @@ def process_discotope3(name, tool_dir):
         # Keep only relevant columns
         df = df[["structure", "chain", "resno", "resid",
                  "discotope3_score", "discotope3_calibrated_score", "discotope3_rsa"]]
-
+        
         all_dfs.append(df)
 
     # Concatenate all chains
     discotope3_df = pd.concat(all_dfs, ignore_index=True)
+    
     return discotope3_df
 
 
@@ -208,7 +214,7 @@ def process_epigraph(pdb, tool_dir):
     residue_split = df["Residue"].str.split(":", expand=True)
     df["chain"] = residue_split[0]
     df["resid"] = residue_split[1]
-    df["resno"] = pd.to_numeric(residue_split[2], errors="coerce")
+    df["resno"] = pd.to_numeric(residue_split[2], errors="coerce").astype("Int64")
 
     # Rename columns
     df = df.rename(columns={
@@ -258,6 +264,7 @@ def standardize_outputs(pdb, pdb_dir, tools, temp_dir, out_dir):
         return
 
     base_df = pd.read_csv(base_csv)
+    base_df["resno"] = pd.to_numeric(base_df["resno"], errors="coerce").astype("Int64")
     
     # Step 2: For each tool, load processed outputs
     for tool in tools:
@@ -273,11 +280,25 @@ def standardize_outputs(pdb, pdb_dir, tools, temp_dir, out_dir):
 
         elif tool == "discotope3":
             df_tool = process_discotope3(pdb, tool_temp_dir)
+            print("Base DF columns:", base_df.columns.tolist())
+            print("Tool DF columns:", df_tool.columns.tolist())
+            
+            print("\nBase DF dtypes:")
+            print(base_df.dtypes)
+            print("\nTool DF dtypes:")
+            print(df_tool.dtypes)
+
+            print("\nBase DF head:")
+            print(base_df.head(5))
+            print("\nTool DF head:")
+            print(df_tool.head(5))
+            
             base_df = base_df.merge(
                 df_tool,
                 on=["structure", "chain", "resno", "resid"],
                 how="left"
             )
+            print(base_df)
 
         elif tool == "epigraph":
             df_tool = process_epigraph(pdb, tool_temp_dir)
@@ -286,6 +307,8 @@ def standardize_outputs(pdb, pdb_dir, tools, temp_dir, out_dir):
                 on=["structure", "model", "chain", "resno", "resid"],
                 how="left"
             )
+            
+    print(base_df)
             
     # Step 3: Save merged df
     merged_csv = os.path.join(out_dir, f"{pdb}_merged.csv")

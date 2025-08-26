@@ -1,5 +1,5 @@
 Job started at:
-Fri Aug 22 23:40:32 CEST 2025
+Tue Aug 26 12:44:51 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
@@ -9,13 +9,13 @@ Found local PDB file: test_data/PDB/2BIB.pdb
 Data Processing...
 Key Error for A:SER:541... appending rsa: 0
 temp/epigraph/2BIB.csv saved!
-[2025-08-22 23:41:02,984] Single-chain mode set, will predict PDBs as single chains
-[2025-08-22 23:41:02,987] Single PDB file input (2BIB), extracting single chains to /scratch/39068368/tmpr1phifs8
-[2025-08-22 23:41:03,060] Found 1 extracted single chains in /scratch/39068368/tmpr1phifs8
-[2025-08-22 23:41:03,060] Pre-processing PDBs using ESM-IF1
-[2025-08-22 23:41:12,019] Predicting PDBs with DiscoTope-3.0
-[2025-08-22 23:41:12,244] Saving predictions for 2BIB_A.pdb to temp/discotope3/2BIB/2BIB_A_discotope3.csv
-[2025-08-22 23:41:12,337] Predicted 1 / 1 PDB files extracted from 1 input PDBs, saved to temp/discotope3/2BIB
+[2025-08-26 12:45:21,011] Single-chain mode set, will predict PDBs as single chains
+[2025-08-26 12:45:21,012] Single PDB file input (2BIB), extracting single chains to /scratch/39175998/tmph8mxk6au
+[2025-08-26 12:45:21,074] Found 1 extracted single chains in /scratch/39175998/tmph8mxk6au
+[2025-08-26 12:45:21,074] Pre-processing PDBs using ESM-IF1
+[2025-08-26 12:45:28,645] Predicting PDBs with DiscoTope-3.0
+[2025-08-26 12:45:28,824] Saving predictions for 2BIB_A.pdb to temp/discotope3/2BIB/2BIB_A_discotope3.csv
+[2025-08-26 12:45:28,900] Predicted 1 / 1 PDB files extracted from 1 input PDBs, saved to temp/discotope3/2BIB
 Saved FASTA to temp/bepipred3/fasta/2BIB.fasta
 GPU device detected: cuda
 Directory for esm encodings already there. Saving encodings there.
@@ -31,10 +31,94 @@ Directory B-cell epitope predictions already there. Saving results there.
 /hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/Polypeptide.py:144: BiopythonDeprecationWarning: 'three_to_one' will be deprecated in a future release of Biopython in favor of 'Bio.PDB.Polypeptide.protein_letters_3to1'.
   warnings.warn(
 Saved standardized atom records to temp/standardized_pdbatoms/2BIB_standardized.csv
+/hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/Polypeptide.py:161: BiopythonDeprecationWarning: 'one_to_three' will be deprecated in a future release of Biopython in favor of 'Bio.PDB.Polypeptide.protein_letters_1to3'.
+  warnings.warn(
 Running epigraph...
 Running discotope3...
 Running bepipred3...
 Extracted FASTA from test_data/PDB/2BIB.pdb -> temp/bepipred3/fasta/2BIB.fasta
+Base DF columns: ['structure', 'model', 'chain', 'seqresno', 'seqresid', 'resno', 'resid', 'icode', 'atom_name', 'altloc', 'x', 'y', 'z', 'occupancy', 'bfactor', 'element', 'epigraph_score', 'epigraph_epiclass', 'epigraph_rsa']
+Tool DF columns: ['structure', 'chain', 'resno', 'resid', 'discotope3_score', 'discotope3_calibrated_score', 'discotope3_rsa']
+
+Base DF dtypes:
+structure             object
+model                  int64
+chain                 object
+seqresno               int64
+seqresid              object
+resno                  Int64
+resid                 object
+icode                 object
+atom_name             object
+altloc                object
+x                    float64
+y                    float64
+z                    float64
+occupancy            float64
+bfactor              float64
+element               object
+epigraph_score       float64
+epigraph_epiclass    float64
+epigraph_rsa         float64
+dtype: object
+
+Tool DF dtypes:
+structure                       object
+chain                           object
+resno                            Int64
+resid                           object
+discotope3_score               float64
+discotope3_calibrated_score    float64
+discotope3_rsa                 float64
+dtype: object
+
+Base DF head:
+  structure  model chain  ...  epigraph_score epigraph_epiclass  epigraph_rsa
+0      2BIB      0     A  ...        0.015607               0.0      1.000000
+1      2BIB      0     A  ...        0.017927               0.0      0.891753
+2      2BIB      0     A  ...        0.020205               0.0      0.346154
+3      2BIB      0     A  ...        0.021632               0.0      0.700000
+4      2BIB      0     A  ...        0.022973               0.0      0.214286
+
+[5 rows x 19 columns]
+
+Tool DF head:
+  structure chain  ...  discotope3_calibrated_score discotope3_rsa
+0      2BIB     A  ...                      0.69353        1.12067
+1      2BIB     A  ...                      1.10985        0.81240
+2      2BIB     A  ...                      0.03644        0.37332
+3      2BIB     A  ...                      0.14478        0.71015
+4      2BIB     A  ...                     -0.21178        0.24578
+
+[5 rows x 7 columns]
+    structure  model  ... discotope3_calibrated_score  discotope3_rsa
+0        2BIB      0  ...                     0.69353         1.12067
+1        2BIB      0  ...                     1.10985         0.81240
+2        2BIB      0  ...                     0.03644         0.37332
+3        2BIB      0  ...                     0.14478         0.71015
+4        2BIB      0  ...                    -0.21178         0.24578
+..        ...    ...  ...                         ...             ...
+542      2BIB      0  ...                         NaN             NaN
+543      2BIB      0  ...                         NaN             NaN
+544      2BIB      0  ...                         NaN             NaN
+545      2BIB      0  ...                         NaN             NaN
+546      2BIB      0  ...                         NaN             NaN
+
+[547 rows x 22 columns]
+    structure  model  ... bepipred3_score  bepipred3_score_linear
+0        2BIB      0  ...        0.075434                0.041522
+1        2BIB      0  ...        0.106774                0.043606
+2        2BIB      0  ...        0.070646                0.047938
+3        2BIB      0  ...        0.073760                0.048412
+4        2BIB      0  ...        0.047086                0.050750
+..        ...    ...  ...             ...                     ...
+542      2BIB      0  ...        0.101821                0.113330
+543      2BIB      0  ...        0.107905                0.099610
+544      2BIB      0  ...        0.125727                0.084737
+545      2BIB      0  ...        0.113592                0.072437
+546      2BIB      0  ...        0.100837                0.061098
+
+[547 rows x 24 columns]
 Saved standardized merged output -> test_output/2BIB_merged.csv
 Job finished at:
-Fri Aug 22 23:41:29 CEST 2025
+Tue Aug 26 12:45:43 CEST 2025

@@ -16,7 +16,7 @@ echo "Current working directory:"
 pwd
 
 echo $SHELL
-python3 bcep.py --pdb_or_fasta "2BIB" --pdb_dir "test_data/PDB" --temp_dir "temp" --out_dir "test_output" --tool epigraph discotope3 bepipred3 
+python3 bcep.py --pdb_or_fasta "3CX3" --pdb_dir "test_data/PDB" --temp_dir "temp" --out_dir "test_output" --tool epigraph discotope3 bepipred3 
 
 echo "Job finished at:"
 date
