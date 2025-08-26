@@ -1,42 +1,48 @@
 Job started at:
-Tue Aug 26 12:44:51 CEST 2025
+Tue Aug 26 12:47:21 CEST 2025
 Current working directory:
 /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline
 /bin/bash
 Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
-Found local PDB file: test_data/PDB/2BIB.pdb
+Using cache found in /home/dla_lti/jvanmeenen/.cache/torch/hub/facebookresearch_esm_main
+Found local PDB file: test_data/PDB/3CX3.pdb
 
 Data Processing...
-Key Error for A:SER:541... appending rsa: 0
-temp/epigraph/2BIB.csv saved!
-[2025-08-26 12:45:21,011] Single-chain mode set, will predict PDBs as single chains
-[2025-08-26 12:45:21,012] Single PDB file input (2BIB), extracting single chains to /scratch/39175998/tmph8mxk6au
-[2025-08-26 12:45:21,074] Found 1 extracted single chains in /scratch/39175998/tmph8mxk6au
-[2025-08-26 12:45:21,074] Pre-processing PDBs using ESM-IF1
-[2025-08-26 12:45:28,645] Predicting PDBs with DiscoTope-3.0
-[2025-08-26 12:45:28,824] Saving predictions for 2BIB_A.pdb to temp/discotope3/2BIB/2BIB_A_discotope3.csv
-[2025-08-26 12:45:28,900] Predicted 1 / 1 PDB files extracted from 1 input PDBs, saved to temp/discotope3/2BIB
-Saved FASTA to temp/bepipred3/fasta/2BIB.fasta
+temp/epigraph/3CX3.csv saved!
+[2025-08-26 12:47:55,020] Single-chain mode set, will predict PDBs as single chains
+[2025-08-26 12:47:55,021] Single PDB file input (3CX3), extracting single chains to /scratch/39176027/tmpzi3096l2
+[2025-08-26 12:47:55,101] Found 2 extracted single chains in /scratch/39176027/tmpzi3096l2
+[2025-08-26 12:47:55,101] Pre-processing PDBs using ESM-IF1
+[2025-08-26 12:48:02,683] Predicting PDBs with DiscoTope-3.0
+[2025-08-26 12:48:02,862] Saving predictions for 3CX3_A.pdb to temp/discotope3/3CX3/3CX3_A_discotope3.csv
+[2025-08-26 12:48:02,907] Saving predictions for 3CX3_B.pdb to temp/discotope3/3CX3/3CX3_B_discotope3.csv
+[2025-08-26 12:48:02,950] Predicted 2 / 2 PDB files extracted from 1 input PDBs, saved to temp/discotope3/3CX3
+Saved FASTA to temp/bepipred3/fasta/3CX3.fasta
 GPU device detected: cuda
 Directory for esm encodings already there. Saving encodings there.
-Number of sequences detected in fasta file: 1
+Number of sequences detected in fasta file: 2
 ESM-2 encoding sequences. Saving encodings to /hpc/dla_lti/jvanmeenen/mrp/BCEP-pipeline/src/BepiPred3.0-Predictor/esm_encodings
-ESM-2 encoded sequence 2BIB:A 1/1
+ESM-2 encoded sequence 3CX3:A 1/2
+ESM-2 encoded sequence 3CX3:B 2/2
 Generating BepiPred-3.0 scores
 Directory B-cell epitope predictions already there. Saving results there.
-Created temp/bepipred3/bp3_2BIB.csv
+Created temp/bepipred3/bp3_3CX3.csv
 Directory B-cell epitope predictions already there. Saving results there.
 /hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/pairwise2.py:278: BiopythonDeprecationWarning: Bio.pairwise2 has been deprecated, and we intend to remove it in a future release of Biopython. As an alternative, please consider using Bio.Align.PairwiseAligner as a replacement, and contact the Biopython developers if you still need the Bio.pairwise2 module.
   warnings.warn(
 /hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/Polypeptide.py:144: BiopythonDeprecationWarning: 'three_to_one' will be deprecated in a future release of Biopython in favor of 'Bio.PDB.Polypeptide.protein_letters_3to1'.
   warnings.warn(
-Saved standardized atom records to temp/standardized_pdbatoms/2BIB_standardized.csv
+/hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/Polypeptide.py:144: BiopythonDeprecationWarning: 'three_to_one' will be deprecated in a future release of Biopython in favor of 'Bio.PDB.Polypeptide.protein_letters_3to1'.
+  warnings.warn(
+Saved standardized atom records to temp/standardized_pdbatoms/3CX3_standardized.csv
+/hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/Polypeptide.py:161: BiopythonDeprecationWarning: 'one_to_three' will be deprecated in a future release of Biopython in favor of 'Bio.PDB.Polypeptide.protein_letters_1to3'.
+  warnings.warn(
 /hpc/dla_lti/jvanmeenen/miniconda3/envs/BCEP/lib/python3.10/site-packages/Bio/PDB/Polypeptide.py:161: BiopythonDeprecationWarning: 'one_to_three' will be deprecated in a future release of Biopython in favor of 'Bio.PDB.Polypeptide.protein_letters_1to3'.
   warnings.warn(
 Running epigraph...
 Running discotope3...
 Running bepipred3...
-Extracted FASTA from test_data/PDB/2BIB.pdb -> temp/bepipred3/fasta/2BIB.fasta
+Extracted FASTA from test_data/PDB/3CX3.pdb -> temp/bepipred3/fasta/3CX3.fasta
 Base DF columns: ['structure', 'model', 'chain', 'seqresno', 'seqresid', 'resno', 'resid', 'icode', 'atom_name', 'altloc', 'x', 'y', 'z', 'occupancy', 'bfactor', 'element', 'epigraph_score', 'epigraph_epiclass', 'epigraph_rsa']
 Tool DF columns: ['structure', 'chain', 'resno', 'resid', 'discotope3_score', 'discotope3_calibrated_score', 'discotope3_rsa']
 
@@ -74,51 +80,51 @@ dtype: object
 
 Base DF head:
   structure  model chain  ...  epigraph_score epigraph_epiclass  epigraph_rsa
-0      2BIB      0     A  ...        0.015607               0.0      1.000000
-1      2BIB      0     A  ...        0.017927               0.0      0.891753
-2      2BIB      0     A  ...        0.020205               0.0      0.346154
-3      2BIB      0     A  ...        0.021632               0.0      0.700000
-4      2BIB      0     A  ...        0.022973               0.0      0.214286
+0      3CX3      0     A  ...             NaN               NaN           NaN
+1      3CX3      0     A  ...             NaN               NaN           NaN
+2      3CX3      0     A  ...             NaN               NaN           NaN
+3      3CX3      0     A  ...             NaN               NaN           NaN
+4      3CX3      0     A  ...             NaN               NaN           NaN
 
 [5 rows x 19 columns]
 
 Tool DF head:
   structure chain  ...  discotope3_calibrated_score discotope3_rsa
-0      2BIB     A  ...                      0.69353        1.12067
-1      2BIB     A  ...                      1.10985        0.81240
-2      2BIB     A  ...                      0.03644        0.37332
-3      2BIB     A  ...                      0.14478        0.71015
-4      2BIB     A  ...                     -0.21178        0.24578
+0      3CX3     A  ...                     -0.47347        1.06809
+1      3CX3     A  ...                      0.24065        0.87844
+2      3CX3     A  ...                      0.50978        0.85978
+3      3CX3     A  ...                     -0.33124        0.37948
+4      3CX3     A  ...                     -0.80157        0.40275
 
 [5 rows x 7 columns]
     structure  model  ... discotope3_calibrated_score  discotope3_rsa
-0        2BIB      0  ...                     0.69353         1.12067
-1        2BIB      0  ...                     1.10985         0.81240
-2        2BIB      0  ...                     0.03644         0.37332
-3        2BIB      0  ...                     0.14478         0.71015
-4        2BIB      0  ...                    -0.21178         0.24578
+0        3CX3      0  ...                         NaN             NaN
+1        3CX3      0  ...                         NaN             NaN
+2        3CX3      0  ...                         NaN             NaN
+3        3CX3      0  ...                         NaN             NaN
+4        3CX3      0  ...                         NaN             NaN
 ..        ...    ...  ...                         ...             ...
-542      2BIB      0  ...                         NaN             NaN
-543      2BIB      0  ...                         NaN             NaN
-544      2BIB      0  ...                         NaN             NaN
-545      2BIB      0  ...                         NaN             NaN
-546      2BIB      0  ...                         NaN             NaN
+563      3CX3      0  ...                    -0.84698         0.15739
+564      3CX3      0  ...                    -0.49107         0.69551
+565      3CX3      0  ...                    -1.04164         0.17747
+566      3CX3      0  ...                    -1.55951         0.01584
+567      3CX3      0  ...                    -1.19219         0.49143
 
-[547 rows x 22 columns]
+[568 rows x 22 columns]
     structure  model  ... bepipred3_score  bepipred3_score_linear
-0        2BIB      0  ...        0.075434                0.041522
-1        2BIB      0  ...        0.106774                0.043606
-2        2BIB      0  ...        0.070646                0.047938
-3        2BIB      0  ...        0.073760                0.048412
-4        2BIB      0  ...        0.047086                0.050750
+0        3CX3      0  ...        0.066070                0.084826
+1        3CX3      0  ...        0.143820                0.104032
+2        3CX3      0  ...        0.187156                0.121788
+3        3CX3      0  ...        0.190610                0.136104
+4        3CX3      0  ...        0.175775                0.156805
 ..        ...    ...  ...             ...                     ...
-542      2BIB      0  ...        0.101821                0.113330
-543      2BIB      0  ...        0.107905                0.099610
-544      2BIB      0  ...        0.125727                0.084737
-545      2BIB      0  ...        0.113592                0.072437
-546      2BIB      0  ...        0.100837                0.061098
+563      3CX3      0  ...        0.039054                0.046559
+564      3CX3      0  ...        0.124890                0.045348
+565      3CX3      0  ...        0.047796                0.036566
+566      3CX3      0  ...        0.014419                0.032381
+567      3CX3      0  ...        0.060857                0.031891
 
-[547 rows x 24 columns]
-Saved standardized merged output -> test_output/2BIB_merged.csv
+[568 rows x 24 columns]
+Saved standardized merged output -> test_output/3CX3_merged.csv
 Job finished at:
-Tue Aug 26 12:45:43 CEST 2025
+Tue Aug 26 12:48:17 CEST 2025
