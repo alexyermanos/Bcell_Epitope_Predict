@@ -10,3 +10,4 @@ src/*
 
 temp/
 test_output/
+logs/

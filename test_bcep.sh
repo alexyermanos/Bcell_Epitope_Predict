@@ -6,7 +6,7 @@
 #SBATCH --mem=20gb
 #SBATCH --cpus-per-task=4
 #SBATCH --time=00:30:00
-#SBATCH --output=bcep_test.log
+#SBATCH --output=logs/bcep_test.log
 
 #run your code
 echo "Job started at:"

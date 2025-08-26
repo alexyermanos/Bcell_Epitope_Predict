@@ -280,25 +280,12 @@ def standardize_outputs(pdb, pdb_dir, tools, temp_dir, out_dir):
 
         elif tool == "discotope3":
             df_tool = process_discotope3(pdb, tool_temp_dir)
-            print("Base DF columns:", base_df.columns.tolist())
-            print("Tool DF columns:", df_tool.columns.tolist())
-            
-            print("\nBase DF dtypes:")
-            print(base_df.dtypes)
-            print("\nTool DF dtypes:")
-            print(df_tool.dtypes)
-
-            print("\nBase DF head:")
-            print(base_df.head(5))
-            print("\nTool DF head:")
-            print(df_tool.head(5))
             
             base_df = base_df.merge(
                 df_tool,
                 on=["structure", "chain", "resno", "resid"],
                 how="left"
             )
-            print(base_df)
 
         elif tool == "epigraph":
             df_tool = process_epigraph(pdb, tool_temp_dir)
@@ -307,8 +294,6 @@ def standardize_outputs(pdb, pdb_dir, tools, temp_dir, out_dir):
                 on=["structure", "model", "chain", "resno", "resid"],
                 how="left"
             )
-            
-    print(base_df)
             
     # Step 3: Save merged df
     merged_csv = os.path.join(out_dir, f"{pdb}_merged.csv")
@@ -382,6 +367,41 @@ def main():
     )
 
     args = parser.parse_args()
+    
+    if args.tool == ["bepipred3"]:
+        args.standardize_outputs = False
+        
+    if ("epigraph" in args.tool or "discotope3" in args.tool):
+        if not args.pdb_dir:
+            print("Error: epigraph and discotope3 require a PDB directory (--pdb_dir).", file=sys.stderr)
+            sys.exit(1)
+        os.makedirs(args.pdb_dir, exist_ok=True)
+
+        # Ensure PDB file exists locally or download
+        pdb_file_path = os.path.join(args.pdb_dir, f"{args.pdb_or_fasta}.pdb")
+        if not os.path.exists(pdb_file_path):
+            print(f"{pdb_file_path} not found locally. Downloading from rcsb.org...\n")
+            try:
+                import wget
+                pdb_lower = args.pdb_or_fasta.lower()
+                wget.download(f"https://files.rcsb.org/download/{pdb_lower}.pdb")
+                shutil.copy(f"{pdb_lower}.pdb", pdb_file_path)
+                os.remove(f"{pdb_lower}.pdb")
+                print(f"\nDownloaded and saved to {pdb_file_path}")
+            except Exception as e:
+                print("="*50)
+                print("Error occurred:", e)
+                print(f"{pdb_lower}.pdb not found in rcsb.org and not found locally")
+                print("Please check the query is available in rcsb.org as pdb format")
+                print("="*50)
+                sys.exit(1)
+        
+    if "bepipred3" in args.tool and not (args.fasta_dir or args.pdb_dir):
+        print(
+            "Error: bepipred3 requires either a FASTA directory (--fasta_dir) or a PDB directory (--pdb_dir) to generate output.",
+            file=sys.stderr
+        )
+        sys.exit(1)
 
     for tool in args.tool:
         tool_temp_dir = os.path.join(args.temp_dir, tool)
