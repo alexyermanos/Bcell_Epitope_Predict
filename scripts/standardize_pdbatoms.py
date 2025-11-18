@@ -44,18 +44,35 @@ def standardize_pdb(pdb_file, output_dir):
 
     # Extract SEQRES sequences for each chain
     seqres_records = list(SeqIO.parse(pdb_file, "pdb-seqres"))
-    seqres_data = []
-    for rec in seqres_records:
-        chain_id = rec.id.split(":")[-1]
-        for i, aa in enumerate(str(rec.seq), 1):
-            seqres_data.append({
-                'structure' : pdb_basename,
-                'chain': chain_id,
-                'seqresid': aa,
-                'seqresno': i
-            })
-    seqres_df = pd.DataFrame(seqres_data)
+
+    if len(seqres_records) == 0:
+        print(f"Warning: No SEQRES records found in {pdb_basename}. Falling back to ATOM residues.")
+        seqres_data = []
+        # Build sequence directly from ATOM residues (CA atoms)
+        for chain in structure.get_chains():
+            residues = [res for res in chain if PDB.is_aa(res, standard=True)]
+            for i, res in enumerate(residues, 1):
+                seqres_data.append({
+                    'structure': pdb_basename,
+                    'chain': chain.id,
+                    'seqresid': res.get_resname(),
+                    'seqresno': i
+                })
+        seqres_df = pd.DataFrame(seqres_data)
+    else:
+        seqres_data = []
+        for rec in seqres_records:
+            chain_id = rec.id.split(":")[-1]
+            for i, aa in enumerate(str(rec.seq), 1):
+                seqres_data.append({
+                    'structure': pdb_basename,
+                    'chain': chain_id,
+                    'seqresid': aa,
+                    'seqresno': i
+                })
+        seqres_df = pd.DataFrame(seqres_data)
     #print(seqres_df)
+
 
     # Align CA atoms to SEQRES sequences for each chain
     standardized_records = []
@@ -64,7 +81,7 @@ def standardize_pdb(pdb_file, output_dir):
         chain_seqres = seqres_df[seqres_df['chain'] == chain]
         chain_atoms = atom_df[atom_df['chain'] == chain]
 
-        seqres_seq = "".join(chain_seqres['seqresid'])
+        seqres_seq =  "".join([PDB.Polypeptide.three_to_one(r) for r in chain_seqres['seqresid']])
 
         # Only unique atoms for alignment
         unique_atoms = chain_atoms.drop_duplicates(subset=['structure','model','chain','resid','resno'])

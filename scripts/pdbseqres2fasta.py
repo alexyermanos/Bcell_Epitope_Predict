@@ -18,6 +18,14 @@ def main():
 
     if not records:
         raise ValueError(f"No sequence could be extracted from {args.pdb_file}")
+    
+    # If the PDB file contained no HEADER info, add PDBID manually
+    if records[0].id.startswith("?"):
+        pdb_id = os.path.splitext(os.path.basename(args.pdb_file))[0]
+        for rec in records:
+            rec.id = f"{pdb_id}:{rec.id.split(':')[-1]}"  # keep chain info (e.g. my_structure:A)
+            rec.name = pdb_id
+            rec.description = f"{pdb_id}:{rec.id.split(':')[-1]}"
 
     # Write FASTA, enforcing header = PDBID:CHAIN
     with open(args.fasta_file, "w") as out_fasta:

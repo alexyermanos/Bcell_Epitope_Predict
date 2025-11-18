@@ -1,3 +1,4 @@
+import re
 import subprocess
 import argparse
 import sys
@@ -173,7 +174,8 @@ def process_discotope3(name, tool_dir):
         df["residue"] = df["residue"].apply(lambda r: Polypeptide.one_to_three(r))
         
         # Extract pdb name from csv filename (before _[chain])
-        pdb_base = os.path.basename(csv_file).split("_")[0]
+        pattern = r'_[A-Z]_discotope3.csv$'
+        pdb_base = re.sub(pattern, '', os.path.basename(csv_file))
 
         # Rename columns
         df = df.rename(columns={
