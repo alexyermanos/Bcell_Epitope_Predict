@@ -40,7 +40,7 @@ Arguments:
 - `--out_dir` final output directory (default: 'output')
 
 Additional arguments:
-- `--tmp_dir` folder name to store output of individual tools in their native format (default: `/temp`)
+- `--temp_dir` folder name to store output of individual tools in their native format (default: `/temp`)
 - `--standardize_outputs` This arguments standardizes the outputs of the different tools to generate a single .csv where the scores for each tool are different columns (default is `True`)
 - `--bp3pred` Prediction model for Bepipred3 (default: 'vt_pred')
 - `--epigraph_device` Device to use for EpiGraph (default: `cuda`, will fallback to `cpu` if unavailable)
