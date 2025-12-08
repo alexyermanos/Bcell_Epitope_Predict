@@ -18,6 +18,8 @@ def run_bepipred3(name, fasta_dir, temp_dir, pred_model, pdb_dir=None):
     # Use fasta_dir only if it's a valid string
     if fasta_dir and os.path.isdir(fasta_dir):
         fasta_file = os.path.join(fasta_dir, name + ".fasta")
+        if not os.path.isfile(fasta_file):
+            fasta_file = fasta_file = os.path.join(fasta_dir, name + ".fa")
     else:
         fasta_file = None
 
